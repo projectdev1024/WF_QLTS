@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbQLTSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="dbQLTSEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Accounts" EntityType="dbQLTSModel.Account" />
+    <EntitySet Name="MuonTBs" EntityType="dbQLTSModel.MuonTB" />
+    <EntitySet Name="Positions" EntityType="dbQLTSModel.Position" />
+    <EntitySet Name="sysdiagrams" EntityType="dbQLTSModel.sysdiagram" />
+    <EntitySet Name="ThietBis" EntityType="dbQLTSModel.ThietBi" />
+    <AssociationSet Name="FK_Account_Position" Association="dbQLTSModel.FK_Account_Position">
+      <End Role="Position" EntitySet="Positions" />
+      <End Role="Account" EntitySet="Accounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MuonTB_Account" Association="dbQLTSModel.FK_MuonTB_Account">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="MuonTB" EntitySet="MuonTBs" />
+    </AssociationSet>
+    <EntitySet Name="CTMuonTBs" EntityType="dbQLTSModel.CTMuonTB" />
+    <AssociationSet Name="FK_CTMuonTB_MuonTB" Association="dbQLTSModel.FK_CTMuonTB_MuonTB">
+      <End Role="MuonTB" EntitySet="MuonTBs" />
+      <End Role="CTMuonTB" EntitySet="CTMuonTBs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CTMuonTB_ThietBi" Association="dbQLTSModel.FK_CTMuonTB_ThietBi">
+      <End Role="ThietBi" EntitySet="ThietBis" />
+      <End Role="CTMuonTB" EntitySet="CTMuonTBs" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Account">
+    <Key>
+      <PropertyRef Name="IDAccount" />
+    </Key>
+    <Property Name="IDAccount" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IDPosition" Type="Int32" />
+    <Property Name="Male" Type="Boolean" />
+    <Property Name="Status" Type="Boolean" />
+    <Property Name="Birthday" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="Position" Relationship="dbQLTSModel.FK_Account_Position" FromRole="Account" ToRole="Position" />
+    <NavigationProperty Name="MuonTBs" Relationship="dbQLTSModel.FK_MuonTB_Account" FromRole="Account" ToRole="MuonTB" />
+  </EntityType>
+  <EntityType Name="MuonTB">
+    <Key>
+      <PropertyRef Name="IDMuonTB" />
+    </Key>
+    <Property Name="IDMuonTB" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IDAccount" Type="Int32" />
+    <Property Name="CreateTime" Type="DateTime" Precision="3" />
+    <Property Name="TimeStart" Type="DateTime" Precision="3" />
+    <Property Name="TimeEnd" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="Boolean" />
+    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateBy" Type="Int32" />
+    <NavigationProperty Name="Account" Relationship="dbQLTSModel.FK_MuonTB_Account" FromRole="MuonTB" ToRole="Account" />
+    <NavigationProperty Name="CTMuonTBs" Relationship="dbQLTSModel.FK_CTMuonTB_MuonTB" FromRole="MuonTB" ToRole="CTMuonTB" />
+  </EntityType>
+  <EntityType Name="Position">
+    <Key>
+      <PropertyRef Name="IDPosition" />
+    </Key>
+    <Property Name="IDPosition" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsDelete" Type="Boolean" />
+    <NavigationProperty Name="Accounts" Relationship="dbQLTSModel.FK_Account_Position" FromRole="Position" ToRole="Account" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="ThietBi">
+    <Key>
+      <PropertyRef Name="IDThietBi" />
+    </Key>
+    <Property Name="IDThietBi" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Total" Type="Int32" />
+    <Property Name="Price" Type="Int32" />
+    <Property Name="CanUse" Type="Int32" />
+    <Property Name="Bad" Type="Int32" />
+    <Property Name="Status" Type="Boolean" />
+    <NavigationProperty Name="CTMuonTBs" Relationship="dbQLTSModel.FK_CTMuonTB_ThietBi" FromRole="ThietBi" ToRole="CTMuonTB" />
+  </EntityType>
+  <Association Name="FK_Account_Position">
+    <End Type="dbQLTSModel.Position" Role="Position" Multiplicity="0..1" />
+    <End Type="dbQLTSModel.Account" Role="Account" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Position">
+        <PropertyRef Name="IDPosition" />
+      </Principal>
+      <Dependent Role="Account">
+        <PropertyRef Name="IDPosition" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MuonTB_Account">
+    <End Type="dbQLTSModel.Account" Role="Account" Multiplicity="0..1" />
+    <End Type="dbQLTSModel.MuonTB" Role="MuonTB" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="IDAccount" />
+      </Principal>
+      <Dependent Role="MuonTB">
+        <PropertyRef Name="IDAccount" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="CTMuonTB">
+    <Key>
+      <PropertyRef Name="IDCTMuon" />
+    </Key>
+    <Property Name="IDCTMuon" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IDMuonTB" Type="Int32" Nullable="false" />
+    <Property Name="IDThietBi" Type="Int32" Nullable="false" />
+    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Total" Type="Int32" />
+    <Property Name="Bad" Type="Int32" />
+    <NavigationProperty Name="MuonTB" Relationship="dbQLTSModel.FK_CTMuonTB_MuonTB" FromRole="CTMuonTB" ToRole="MuonTB" />
+    <NavigationProperty Name="ThietBi" Relationship="dbQLTSModel.FK_CTMuonTB_ThietBi" FromRole="CTMuonTB" ToRole="ThietBi" />
+  </EntityType>
+  <Association Name="FK_CTMuonTB_MuonTB">
+    <End Type="dbQLTSModel.MuonTB" Role="MuonTB" Multiplicity="1" />
+    <End Type="dbQLTSModel.CTMuonTB" Role="CTMuonTB" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MuonTB">
+        <PropertyRef Name="IDMuonTB" />
+      </Principal>
+      <Dependent Role="CTMuonTB">
+        <PropertyRef Name="IDMuonTB" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CTMuonTB_ThietBi">
+    <End Type="dbQLTSModel.ThietBi" Role="ThietBi" Multiplicity="1" />
+    <End Type="dbQLTSModel.CTMuonTB" Role="CTMuonTB" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ThietBi">
+        <PropertyRef Name="IDThietBi" />
+      </Principal>
+      <Dependent Role="CTMuonTB">
+        <PropertyRef Name="IDThietBi" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
